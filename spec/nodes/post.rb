@@ -3,7 +3,7 @@ class Post
 
   property :title
   property :description, type: String
-  property :published, type: Boolean
+  property :published, type: Boolean, default: false
   property :custom_constraint, constraint: :unique
   include Neo4j::Timestamps
 

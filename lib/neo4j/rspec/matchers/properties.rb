@@ -28,19 +28,21 @@ module Neo4j
           end
         end
 
-        matcher :define_property do |name, type = nil|
+        matcher :define_property do |name, type = nil, default: nil|
           match do |model|
             name = name.to_s
 
             expected_type = Neo4j::Shared.const_get(type.to_s) if type
-            model.class.attributes.key?(name) && model.class.attributes[name].type == expected_type
+            model.class.attributes.key?(name) &&
+              model.class.attributes[name].type == expected_type &&
+              model.class.attributes[name].default == default
           end
 
           failure_message do |model|
             "expected the #{model.class.name} model to have a `#{type}` property #{name}"
           end
 
-          failure_message_when_negated do |model|
+          failure_message_when_negated do |model| # TODO: make this have default descriptor
             "expected the #{model.class.name} model not to have a `#{type}` property #{name}"
           end
         end
